@@ -3,6 +3,7 @@ package augustobellinaso.algalogapi.controller;
 import augustobellinaso.algalogapi.assembler.EntregaAssembler;
 import augustobellinaso.algalogapi.domain.model.Entrega;
 import augustobellinaso.algalogapi.domain.repository.EntregaRepository;
+import augustobellinaso.algalogapi.domain.service.FinalizacaoEntregaService;
 import augustobellinaso.algalogapi.domain.service.SolicitacaoEntregaService;
 import augustobellinaso.algalogapi.model.DestinatarioModel;
 import augustobellinaso.algalogapi.model.EntregaModel;
@@ -24,6 +25,7 @@ public class EntregaController {
     private SolicitacaoEntregaService solicitacaoEntregaService;
     private EntregaRepository entregaRepository;
     private EntregaAssembler entregaAssembler;
+    private FinalizacaoEntregaService finalizacaoEntregaService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -32,6 +34,13 @@ public class EntregaController {
         Entrega entregaSolicitada = solicitacaoEntregaService.solicitar(novaEntrega);
 
         return entregaAssembler.toModel(entregaSolicitada);
+    }
+
+    @PutMapping("/{entregaId}/finalizacao")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void finalizar(@PathVariable Long entregaId) {
+        finalizacaoEntregaService.finalizar(entregaId);
+
     }
 
     @GetMapping
