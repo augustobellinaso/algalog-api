@@ -12,8 +12,8 @@ import java.time.OffsetDateTime;
 public class EntregaModel {
 
     private Long id;
-    private String nomeCliente;
-    private DestinatarioModel destinario;
+    private ClienteResumoModel cliente;
+    private DestinatarioModel destinatario;
     private BigDecimal taxa;
     private StatusEntrega status;
     private OffsetDateTime dataPedido;
