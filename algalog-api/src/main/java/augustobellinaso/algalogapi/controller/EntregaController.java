@@ -3,6 +3,8 @@ package augustobellinaso.algalogapi.controller;
 import augustobellinaso.algalogapi.domain.model.Entrega;
 import augustobellinaso.algalogapi.domain.repository.EntregaRepository;
 import augustobellinaso.algalogapi.domain.service.SolicitacaoEntregaService;
+import augustobellinaso.algalogapi.model.DestinatarioModel;
+import augustobellinaso.algalogapi.model.EntregaModel;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +34,25 @@ public class EntregaController {
     }
 
     @GetMapping("/{entregaId}")
-    public ResponseEntity<Entrega> buscar(@PathVariable Long entregaId) {
+    public ResponseEntity<EntregaModel> buscar(@PathVariable Long entregaId) {
         return entregaRepository.findById(entregaId)
-                .map(ResponseEntity::ok)
+                .map(entrega -> {
+                    EntregaModel entregaModel = new EntregaModel();
+                    entregaModel.setId(entrega.getId());
+                    entregaModel.setNomeCliente(entrega.getCliente().getNome());
+                    entregaModel.setDestinario(new DestinatarioModel());
+                    entregaModel.getDestinario().setNome(entrega.getDestinatario().getNome());
+                    entregaModel.getDestinario().setLogradouro(entrega.getDestinatario().getLogradouro());
+                    entregaModel.getDestinario().setNumero(entrega.getDestinatario().getNumero());
+                    entregaModel.getDestinario().setComplemento(entrega.getDestinatario().getComplemento());
+                    entregaModel.getDestinario().setBairro(entrega.getDestinatario().getBairro());
+                    entregaModel.setTaxa(entrega.getTaxa());
+                    entregaModel.setStatus(entrega.getStatus());
+                    entregaModel.setDataPedido(entrega.getDataPedido());
+                    entregaModel.setDataFinalizacao(entrega.getDataFinalizacao());
+
+                    return ResponseEntity.ok(entregaModel);
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
 }
